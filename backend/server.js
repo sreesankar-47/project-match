@@ -16,40 +16,40 @@ app.get('/', (req, res) => {
     res.send('ProjectMatch Backend Server is running smoothly!');
 });
 
-// 2. 🧠 The AI Team Matching Engine Route
-app.post('/api/match', async (req, res) => {
+// 2. 🧠 The AI Project Discovery Recommendation Route
+app.post('/api/projects/recommend', async (req, res) => {
     try {
-        const { students, projectRequirements } = req.body;
+        const { studentSkills, activeProjects } = req.body;
 
-        // Formulate a clean, instructional prompt for Gemini
+        // Construct a tailored prompt for your marketplace discovery concept
         const prompt = `
-            You are an expert academic team coordinator. 
-            I am going to provide you with a list of students and the project requirements.
-            Your job is to cleanly organize these students into optimized teams based on how their skill sets complement the requirements.
-
-            Project Requirements: ${projectRequirements}
-            Available Students: ${JSON.stringify(students)}
-
-            Please return a structured breakdown of recommended teams, outlining who belongs where and a short sentence explaining why this team is balanced.
+            Act as a project discovery assistant for a college project marketplace. 
+            A student has the following skillset: ${JSON.stringify(studentSkills)}.
+            
+            Review these active projects posted by project leads: ${JSON.stringify(activeProjects)}.
+            
+            Analyze which of these posted marketplace projects demand this student's skills the most. 
+            Return a clean breakdown of the best project matches, including a brief, encouraging 
+            explanation of exactly why their skills are demanded and how they can contribute if they request to join.
         `;
 
-        // Fire the request over to Google Gemini 2.5 Flash
+        // Fire the request over to Google Gemini
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
-        // Send the AI's intelligent breakdown right back to the client
+        // Send the AI's intelligent discovery match back to the user
         res.json({
             success: true,
-            teamMatches: response.text
+            recommendations: response.text
         });
 
     } catch (error) {
-        console.error("AI Matching Error:", error);
-        res.status(500).json({ 
-            success: false, 
-            message: "Something went wrong while matching teams with the AI." 
+        console.error("AI Recommendation Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while fetching project recommendations."
         });
     }
 });
