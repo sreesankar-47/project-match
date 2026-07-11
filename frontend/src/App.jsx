@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import PostProject from './pages/PostProject';
+import AiMatch from './pages/AiMatch';
 
 function App() {
   return (
@@ -19,10 +20,13 @@ function App() {
           boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
         }}>
           <Link to="/" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px' }}>
-            🏠 Browse Projects
+            Browse Projects
           </Link>
           <Link to="/post" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px' }}>
-            ➕ Post a Project
+            Post a Project
+          </Link>
+          <Link to="/discover" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold', fontSize: '18px' }}>
+            AI Matchmaker
           </Link>
         </nav>
 
@@ -30,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/post" element={<PostProject />} />
+          <Route path="/discover" element={<AiMatch />} />
         </Routes>
         
       </div>
