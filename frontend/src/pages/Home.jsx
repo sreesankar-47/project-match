@@ -7,8 +7,8 @@ function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch all project listings from our backend API
-    axios.get('http://localhost:5000/api/projects')
+    // Fetch all project listings from our live backend API
+    axios.get('https://project-match.onrender.com/api/projects')
       .then((response) => {
         setProjects(response.data);
         setLoading(false);

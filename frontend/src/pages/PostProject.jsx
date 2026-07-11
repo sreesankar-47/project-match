@@ -14,8 +14,8 @@ function PostProject() {
     const skillsArray = skills.split(',').map(skill => skill.trim());
 
     try {
-      // 👈 Now sending all 4 required fields to the backend!
-      await axios.post('http://localhost:5000/api/projects', {
+      // 👈 Now sending all 4 required fields to the LIVE backend!
+      await axios.post('https://project-match.onrender.com/api/projects', {
         title: title,
         description: description,
         requiredSkills: skillsArray,

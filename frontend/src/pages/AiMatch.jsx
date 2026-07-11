@@ -7,6 +7,7 @@ function AiMatch() {
   const [recommendations, setRecommendations] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -14,12 +15,12 @@ function AiMatch() {
     setRecommendations('');
 
     try {
-      // 1. Fetch the active projects from your database first
-      const dbResponse = await axios.get('http://localhost:5000/api/projects');
+      // 1. Fetch the active projects from your live Render database first
+      const dbResponse = await axios.get('https://project-match.onrender.com/api/projects');
       const activeProjects = dbResponse.data;
 
-      // 2. Send the skills AND the projects to your exact AI route
-      const aiResponse = await axios.post('http://localhost:5000/api/projects/recommend', {
+      // 2. Send the skills AND the projects to your exact live AI route
+      const aiResponse = await axios.post('https://project-match.onrender.com/api/projects/recommend', {
         studentSkills: skills,
         activeProjects: activeProjects
       });
@@ -76,22 +77,20 @@ function AiMatch() {
       )}
 
       {recommendations && (
-     <div style={{ 
-       padding: '20px', 
-       backgroundColor: '#f8f9fa', 
-       border: '1px solid #e2e8f0', 
-       borderRadius: '8px',
-       lineHeight: '1.6',
-       color: '#333'
-     }}>
-       <h3 style={{ marginTop: 0, borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>AI Recommendations</h3>
-       <ReactMarkdown>{recommendations}</ReactMarkdown>
-     </div>
-   )}
+        <div style={{ 
+          padding: '20px', 
+          backgroundColor: '#f8f9fa', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px',
+          lineHeight: '1.6',
+          color: '#333'
+        }}>
+          <h3 style={{ marginTop: 0, borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>AI Recommendations</h3>
+          <ReactMarkdown>{recommendations}</ReactMarkdown>
+        </div>
+      )}
     </div>
   );
 }
 
 export default AiMatch;
-
-
