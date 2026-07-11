@@ -1,25 +1,38 @@
 require('dotenv').config(); // Load our secret keys from the .env file
 const express = require('express');
+const cors = require('cors');
 const { GoogleGenAI } = require('@google/genai');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = 5000;
+app.use(cors());
 
-// Middleware to let our server process incoming JSON data
+// 1. Middleware to let our server process incoming JSON data (Place early!)
 app.use(express.json());
 
-// Initialize the Google Gen AI client (it will automatically look for your GEMINI_API_KEY)
+// 2. Connect to MongoDB Atlas Cloud
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('✅ Connected to MongoDB Atlas cloud database successfully!'))
+    .catch((err) => console.error('❌ MongoDB database connection error:', err));
+
+// 3. Initialize the Google Gen AI client
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// 1. Simple Welcome Home Route
+// 4. Simple Welcome Home Route
 app.get('/', (req, res) => {
     res.send('ProjectMatch Backend Server is running smoothly!');
 });
 
-// 2. 🧠 The AI Project Discovery Recommendation Route
+// 5. 🧠 The AI Project Discovery Recommendation Route
 app.post('/api/projects/recommend', async (req, res) => {
     try {
         const { studentSkills, activeProjects } = req.body;
+
+        // Validation check
+        if (!studentSkills || !activeProjects) {
+            return res.status(400).json({ success: false, message: 'Missing studentSkills or activeProjects data' });
+        }
 
         // Construct a tailored prompt for your marketplace discovery concept
         const prompt = `
@@ -54,7 +67,11 @@ app.post('/api/projects/recommend', async (req, res) => {
     }
 });
 
-// Start our backend listener
+// 6. Link our marketplace project routes
+app.use('/api/projects', require('./routes/projectRoutes'));
+
+// 7. Start our backend listener
 app.listen(PORT, () => {
     console.log(`🚀 AI Engine is live and listening on http://localhost:${PORT}`);
 });
+
