@@ -69,9 +69,11 @@ app.post('/api/projects/recommend', async (req, res) => {
 
 // 6. Link our marketplace project routes
 app.use('/api/projects', require('./routes/projectRoutes'));
+app.use('/api/auth', require('./routes/auth'));
 
 // 7. Start our backend listener
 app.listen(PORT, () => {
     console.log(`🚀 AI Engine is live and listening on http://localhost:${PORT}`);
 });
+
 

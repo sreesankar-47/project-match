@@ -13,8 +13,12 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
+    password: {            // 👈 We just added this for security!
+        type: String,
+        required: true
+    },
     skills: {
-        type: [String], // Array of skills e.g., ['React', 'Node.js', 'Python']
+        type: [String], 
         default: []
     },
     bio: {
@@ -22,6 +26,6 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         default: ''
     }
-}, { timestamps: true }); // Automatically tracks 'createdAt' and 'updatedAt' fields
+}, { timestamps: true }); 
 
 module.exports = mongoose.model('User', UserSchema);
