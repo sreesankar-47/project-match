@@ -39,5 +39,32 @@ router.post('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+// 🚀 Route 3: Route to handle a user requesting to join a project
+router.post('/:id/request', async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { userId } = req.body; 
 
+    const project = await Project.findById(projectId);
+    
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Check if the user has already requested to join to prevent spam
+    if (project.requests.includes(userId)) {
+      return res.status(400).json({ message: 'You have already requested to join this project.' });
+    }
+
+    // Add the user's ID to the requests array and save to the database
+    project.requests.push(userId);
+    await project.save();
+
+    res.status(200).json({ message: 'Request sent successfully!' });
+  } catch (error) {
+    console.error("Error joining project:", error);
+    res.status(500).json({ message: 'Server error while sending request' });
+  }
+});
+
+module.exports = router;

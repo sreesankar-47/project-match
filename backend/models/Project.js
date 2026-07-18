@@ -18,7 +18,12 @@ const ProjectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, // Connects the project to a specific User ID
         ref: 'User',
         required: true
-    }
+    },
+    // 👈 Added this new field to store join requests
+    requests: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Project', ProjectSchema);
