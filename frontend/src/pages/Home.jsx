@@ -34,20 +34,22 @@ function Home() {
     }
   };
 
-  if (loading) return <div className="p-4">Loading marketplace...</div>;
+  if (loading) return <div className="p-4">Loading project listings...</div>;
   if (error) return <div className="p-4 text-red">{error}</div>;
 
   return (
     <div>
       <main className="container">
-        <h1 className="hero-title">Build what the market is actually asking for.</h1>
+        {/* Updated Mission-Focused Hero Section */}
+        <h1 className="hero-title">Form teams based on skill, not proximity.</h1>
         <p className="hero-subtitle">
-          Students post project ideas sourced from live hiring-skill demand. Join one, or start your own.
+          Don't just group up with seat-neighbors. 
+          Find the right teammates based on the technical skills required for your classroom projects.
         </p>
 
         {projects.map((project) => (
           <div key={project._id} className="project-card">
-            <div className="listing-tag">● LIVE LISTING • DEMAND-MATCHED</div>
+            <div className="listing-tag">● SKILL-BASED TEAM FORMATION</div>
             <h2>{project.title}</h2>
             <p className="project-desc">{project.description}</p>
             
