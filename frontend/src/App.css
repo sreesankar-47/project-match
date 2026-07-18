@@ -1,4 +1,11 @@
 /* App.css - Professional Navy Theme */
+
+/* Universal Fix for Mobile Layouts */
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
 body { background-color: #F8F9FB; color: #0A2540; font-family: 'Georgia', serif; margin: 0; }
 
 /* Navigation Bar Styles */
@@ -18,9 +25,42 @@ body { background-color: #F8F9FB; color: #0A2540; font-family: 'Georgia', serif;
 
 .skills-section { margin-bottom: 25px; }
 .skills-label { font-size: 0.75rem; text-transform: uppercase; color: #888; margin-bottom: 12px; }
-.skill-pill { border: 1px solid #E5E7EB; padding: 6px 16px; border-radius: 20px; margin-right: 10px; font-size: 0.9rem; font-family: sans-serif; color: #0A2540; display: inline-block; }
+.skill-pill { border: 1px solid #E5E7EB; padding: 6px 16px; border-radius: 20px; margin-right: 10px; font-size: 0.9rem; font-family: sans-serif; color: #0A2540; display: inline-block; margin-bottom: 8px; }
 
 .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E5E7EB; padding-top: 20px; }
 .lead-email { display: block; color: #666; }
 .btn-primary { background-color: #0A2540; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
 .auth-prompt { font-size: 0.9rem; color: #666; font-style: italic; }
+
+/* Responsive Mobile Styles */
+@media (max-width: 768px) {
+  .nav-bar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .hero-title {
+    font-size: 2rem !important;
+  }
+
+  .container {
+    padding: 30px 15px;
+  }
+
+  .project-card {
+    padding: 1.5rem;
+  }
+
+  .project-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
