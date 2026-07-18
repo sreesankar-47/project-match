@@ -5,6 +5,7 @@ import PostProject from './pages/PostProject';
 import AiMatch from './pages/AiMatch';
 import Register from './pages/Register'; 
 import Login from './pages/Login'; 
+import Dashboard from './pages/Dashboard'; // 👈 1. Imported the new Dashboard component
 
 function App() {
   // 1. Check if there is a logged-in user saved in the browser's memory
@@ -39,6 +40,14 @@ function App() {
           <Link to="/post" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px' }}>
             Post a Project
           </Link>
+          
+          {/* 👈 2. Added Dashboard link, conditionally rendering only for logged-in users */}
+          {user && (
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px' }}>
+              My Dashboard
+            </Link>
+          )}
+
           <Link to="/discover" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold', fontSize: '18px' }}>
             AI Matchmaker
           </Link>
@@ -69,6 +78,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/post" element={<PostProject />} />
+          
+          {/* 👈 3. Added the Route for the Dashboard */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          
           <Route path="/discover" element={<AiMatch />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
