@@ -116,7 +116,7 @@ router.get('/joined-projects/:userId', async (req, res) => {
     }
 });
 
-// 🤖 Route 7: AI Matchmaking
+// 🤖 Route 7: Original Matchmaking Route
 router.get('/match/:userId', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
@@ -124,7 +124,6 @@ router.get('/match/:userId', async (req, res) => {
 
         const allProjects = await Project.find().populate('projectLead', 'name email');
 
-        // Score projects based on skills overlap
         const matches = allProjects.map(project => {
             const matchesCount = project.requiredSkills.filter(skill => 
                 user.skills.includes(skill)
@@ -136,7 +135,6 @@ router.get('/match/:userId', async (req, res) => {
             };
         });
 
-        // Filter for at least one skill match and sort by best score
         const rankedMatches = matches
             .filter(m => m.matchScore > 0)
             .sort((a, b) => b.matchScore - a.matchScore);
@@ -144,6 +142,38 @@ router.get('/match/:userId', async (req, res) => {
         res.json(rankedMatches);
     } catch (error) {
         res.status(500).json({ message: "Error in AI matchmaking", error });
+    }
+});
+
+// 💡 Route 8: NEW Recommendation route for AiMatch.jsx
+router.post('/recommend', async (req, res) => {
+    try {
+        const { studentSkills, activeProjects } = req.body;
+        const skillList = studentSkills.split(',').map(s => s.trim().toLowerCase());
+
+        const recommendations = activeProjects.map(project => {
+            const matches = project.requiredSkills.filter(reqSkill => 
+                skillList.includes(reqSkill.toLowerCase())
+            );
+            
+            return {
+                title: project.title,
+                score: matches.length,
+                reason: matches.length > 0 
+                    ? `Matches your skills in: ${matches.join(', ')}` 
+                    : null
+            };
+        })
+        .filter(p => p.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+        const markdownResponse = recommendations.length > 0 
+            ? recommendations.map(r => `### ${r.title}\n**Match Score:** ${r.score}\n*${r.reason}*\n`).join('\n')
+            : "No specific project matches found for your skills. Try adding more technologies!";
+
+        res.json({ recommendations: markdownResponse });
+    } catch (error) {
+        res.status(500).json({ message: "Error generating recommendations" });
     }
 });
 
