@@ -3,45 +3,48 @@ import axios from 'axios';
 
 function Dashboard() {
   const [myProjects, setMyProjects] = useState([]);
+  const [joinedProjects, setJoinedProjects] = useState([]); // 👈 State for projects the user joined
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Get the logged-in user
   const userString = localStorage.getItem('user');
   const currentUser = userString ? JSON.parse(userString) : null;
 
-  // 1. Defined outside useEffect so we can call it to refresh the page after accepting someone
-  const fetchMyProjects = async () => {
+  const fetchDashboardData = async () => {
     try {
       const userId = currentUser._id || currentUser.id;
-      const response = await axios.get(`https://project-match.onrender.com/api/projects/my-projects/${userId}`);
-      setMyProjects(response.data);
+      
+      // Fetch BOTH projects they lead and projects they joined simultaneously
+      const [myProjectsRes, joinedProjectsRes] = await Promise.all([
+        axios.get(`https://project-match.onrender.com/api/projects/my-projects/${userId}`),
+        axios.get(`https://project-match.onrender.com/api/projects/joined-projects/${userId}`)
+      ]);
+
+      setMyProjects(myProjectsRes.data);
+      setJoinedProjects(joinedProjectsRes.data); // 👈 Save the joined projects data
       setLoading(false);
     } catch (err) {
       console.error('❌ Error fetching dashboard:', err);
-      setError('Failed to load your projects.');
+      setError('Failed to load dashboard data.');
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (currentUser) {
-      fetchMyProjects();
+      fetchDashboardData();
     } else {
       setLoading(false);
     }
   }, [currentUser]);
 
-  // 2. New function that fires when you click "Accept"
   const handleAccept = async (projectId, applicantId, applicantName) => {
     try {
       await axios.post(`https://project-match.onrender.com/api/projects/${projectId}/accept`, {
         userId: applicantId
       });
       alert(`✅ Success! You have accepted ${applicantName} into the project.`);
-      
-      // Refresh the dashboard to instantly move them from Applicants to Team Members
-      fetchMyProjects(); 
+      fetchDashboardData(); // Refresh the page to show the update
     } catch (error) {
       console.error('Error accepting applicant:', error);
       alert('❌ Failed to accept applicant. Please try again.');
@@ -49,40 +52,30 @@ function Dashboard() {
   };
 
   if (!currentUser) return <div style={{ padding: '20px' }}>Please log in to view your dashboard.</div>;
-  if (loading) return <div style={{ padding: '20px' }}>Loading your projects...</div>;
+  if (loading) return <div style={{ padding: '20px' }}>Loading your dashboard...</div>;
   if (error) return <div style={{ padding: '20px', color: 'red' }}>{error}</div>;
 
   return (
     <div style={{ padding: '30px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
       <h1 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
-        📊 My Project Dashboard
+        📊 My Dashboard
       </h1>
-      <p style={{ color: '#666' }}>Manage the projects you have posted and build your team.</p>
       
-      <div style={{ marginTop: '20px' }}>
+      {/* --- SECTION 1: PROJECTS I AM LEADING --- */}
+      <h2 style={{ color: '#333', marginTop: '30px' }}>👑 Projects I'm Leading</h2>
+      <div style={{ marginTop: '10px' }}>
         {myProjects.length === 0 ? (
-          <p>You haven't posted any projects yet.</p>
+          <p style={{ color: '#666' }}>You haven't posted any projects yet.</p>
         ) : (
           myProjects.map((project) => (
-            <div 
-              key={project._id} 
-              style={{
-                border: '1px solid #007bff',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '20px',
-                backgroundColor: '#f8faff'
-              }}
-            >
-              <h2 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>{project.title}</h2>
+            <div key={project._id} style={{ border: '1px solid #007bff', borderRadius: '8px', padding: '20px', marginBottom: '20px', backgroundColor: '#f8faff' }}>
+              <h3 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>{project.title}</h3>
               <p style={{ color: '#555' }}>{project.description}</p>
               
-              {/* 👥 Applicants Section with Accept Buttons */}
               <div style={{ marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '6px', border: '1px solid #ddd' }}>
-                <h3 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#333' }}>
+                <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#333' }}>
                   👥 Applicants ({project.requests?.length || 0})
-                </h3>
-                
+                </h4>
                 {!project.requests || project.requests.length === 0 ? (
                   <p style={{ margin: 0, color: '#777', fontSize: '14px' }}>No pending requests.</p>
                 ) : (
@@ -105,12 +98,11 @@ function Dashboard() {
                 )}
               </div>
 
-              {/* ✅ New Team Members Section */}
               {project.acceptedMembers && project.acceptedMembers.length > 0 && (
                 <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '6px', border: '1px solid #c8e6c9' }}>
-                  <h3 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2e7d32' }}>
+                  <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2e7d32' }}>
                     ✅ Team Members ({project.acceptedMembers.length})
-                  </h3>
+                  </h4>
                   <ul style={{ margin: 0, paddingLeft: '20px', color: '#1b5e20' }}>
                     {project.acceptedMembers.map((member) => (
                       <li key={member._id} style={{ marginBottom: '5px' }}>
@@ -120,11 +112,34 @@ function Dashboard() {
                   </ul>
                 </div>
               )}
-
             </div>
           ))
         )}
       </div>
+
+      {/* --- SECTION 2: PROJECTS I HAVE JOINED --- */}
+      <h2 style={{ color: '#333', marginTop: '40px', borderTop: '2px solid #eee', paddingTop: '20px' }}>
+        🤝 Projects I've Joined
+      </h2>
+      <div style={{ marginTop: '10px' }}>
+        {joinedProjects.length === 0 ? (
+          <p style={{ color: '#666' }}>You haven't been accepted into any projects yet.</p>
+        ) : (
+          joinedProjects.map((project) => (
+            <div key={project._id} style={{ border: '1px solid #28a745', borderRadius: '8px', padding: '20px', marginBottom: '20px', backgroundColor: '#f8fff9' }}>
+              <h3 style={{ margin: '0 0 10px 0', color: '#155724' }}>{project.title}</h3>
+              <p style={{ color: '#555' }}>{project.description}</p>
+              <div style={{ marginTop: '10px', fontSize: '14px', color: '#444' }}>
+                <strong>Project Lead:</strong> {project.projectLead?.name} (<a href={`mailto:${project.projectLead?.email}`} style={{ color: '#007bff' }}>{project.projectLead?.email}</a>)
+              </div>
+              <div style={{ marginTop: '10px', display: 'inline-block', padding: '5px 10px', backgroundColor: '#d4edda', color: '#155724', borderRadius: '4px', fontWeight: 'bold', fontSize: '14px' }}>
+                🎉 You are on the team!
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
     </div>
   );
 }
