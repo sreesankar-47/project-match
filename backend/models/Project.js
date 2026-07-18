@@ -11,16 +11,20 @@ const ProjectSchema = new mongoose.Schema({
         required: true
     },
     requiredSkills: {
-        type: [String], // Skills needed for this project e.g., ['MongoDB', 'Express']
+        type: [String], 
         required: true
     },
     projectLead: {
-        type: mongoose.Schema.Types.ObjectId, // Connects the project to a specific User ID
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    // 👈 Added this new field to store join requests
     requests: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }],
+    // 🚀 Added this new field to store accepted team members
+    acceptedMembers: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
     }]
