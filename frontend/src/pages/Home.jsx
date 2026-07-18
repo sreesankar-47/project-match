@@ -39,25 +39,6 @@ function Home() {
 
   return (
     <div>
-      {/* Professional Left-Right Navbar */}
-      <nav className="nav-bar">
-        <div className="logo">
-          <h1 style={{ margin: 0, fontSize: '1.25rem', color: '#0A2540' }}>ProjectMatch</h1>
-        </div>
-
-        <div className="nav-links">
-          <a href="/projects">Browse</a>
-          <a href="/post">Post</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/matchmaker" style={{ color: '#0A2540', fontWeight: 'bold' }}>AI Matchmaker</a>
-        </div>
-
-        <div className="user-section">
-          <span>Hi, {currentUser?.name || 'User'}</span>
-          <button className="logout-btn">Logout</button>
-        </div>
-      </nav>
-
       <main className="container">
         <h1 className="hero-title">Build what the market is actually asking for.</h1>
         <p className="hero-subtitle">
@@ -66,21 +47,14 @@ function Home() {
 
         {projects.map((project) => (
           <div key={project._id} className="project-card">
-            <div className="listing-tag">
-              ● LIVE LISTING • DEMAND-MATCHED
-            </div>
-            
+            <div className="listing-tag">● LIVE LISTING • DEMAND-MATCHED</div>
             <h2>{project.title}</h2>
-            <p className="project-desc">
-              {project.description}
-            </p>
+            <p className="project-desc">{project.description}</p>
             
             <div className="skills-section">
               <p className="skills-label">Required Skills</p>
               {project.requiredSkills.map((skill, index) => (
-                <span key={index} className="skill-pill">
-                  {skill}
-                </span>
+                <span key={index} className="skill-pill">{skill}</span>
               ))}
             </div>
 
@@ -91,16 +65,11 @@ function Home() {
               </div>
               
               {currentUser ? (
-                <button 
-                  onClick={() => handleJoinRequest(project._id)}
-                  className="btn-primary"
-                >
+                <button onClick={() => handleJoinRequest(project._id)} className="btn-primary">
                   Request to Join
                 </button>
               ) : (
-                <span className="auth-prompt">
-                  🔒 Log in to join
-                </span>
+                <span className="auth-prompt">🔒 Log in to join</span>
               )}
             </div>
           </div>
