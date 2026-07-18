@@ -64,15 +64,36 @@ router.post('/:id/request', async (req, res) => {
   }
 });
 
-// 📊 Route 4: Get Dashboard projects
+// Route 4: Get Dashboard projects with Candidate Scoring
 router.get('/my-projects/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
+        
+        // Populate 'skills' so we can perform the comparison
         const myProjects = await Project.find({ projectLead: userId })
-            .populate('requests', 'name email')
+            .populate('requests', 'name email skills')
             .populate('acceptedMembers', 'name email');
 
-        res.status(200).json(myProjects);
+        const projectsWithScores = myProjects.map(project => {
+            const scoredRequests = project.requests.map(applicant => {
+                // Count intersection of applicant skills and project requiredSkills
+                const score = applicant.skills.filter(s => 
+                    project.requiredSkills.includes(s)
+                ).length;
+                
+                return {
+                    ...applicant.toObject(),
+                    matchScore: score
+                };
+            });
+
+            return {
+                ...project.toObject(),
+                requests: scoredRequests.sort((a, b) => b.matchScore - a.matchScore)
+            };
+        });
+
+        res.status(200).json(projectsWithScores);
     } catch (error) {
         console.error('❌ Error fetching dashboard projects:', error);
         res.status(500).json({ message: 'Server error pulling dashboard projects' });
@@ -145,7 +166,7 @@ router.get('/match/:userId', async (req, res) => {
     }
 });
 
-// 💡 Route 8: NEW Recommendation route for AiMatch.jsx
+// 💡 Route 8: Recommendation route for AiMatch.jsx
 router.post('/recommend', async (req, res) => {
     try {
         const { studentSkills, activeProjects } = req.body;
