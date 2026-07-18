@@ -1,9 +1,14 @@
 /* App.css - Professional Navy Theme */
 body { background-color: #F8F9FB; color: #0A2540; font-family: 'Georgia', serif; margin: 0; }
 
-.nav-bar { background: white; border-bottom: 1px solid #E5E7EB; padding: 1.5rem 2rem; }
-.container { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
+/* Navigation Bar Styles */
+.nav-bar { background: white; border-bottom: 1px solid #E5E7EB; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { text-decoration: none; color: #0A2540; font-weight: 500; font-size: 0.9rem; }
+.user-section { display: flex; gap: 15px; align-items: center; font-size: 0.9rem; }
+.logout-btn { background: none; border: 1px solid #E5E7EB; padding: 5px 12px; border-radius: 6px; cursor: pointer; color: #0A2540; }
 
+.container { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
 .hero-title { font-size: 3rem; font-weight: bold; margin-bottom: 20px; line-height: 1.2; }
 .hero-subtitle { font-size: 1.2rem; color: #666; margin-bottom: 40px; }
 
@@ -15,15 +20,7 @@ body { background-color: #F8F9FB; color: #0A2540; font-family: 'Georgia', serif;
 .skills-label { font-size: 0.75rem; text-transform: uppercase; color: #888; margin-bottom: 12px; }
 .skill-pill { border: 1px solid #E5E7EB; padding: 6px 16px; border-radius: 20px; margin-right: 10px; font-size: 0.9rem; font-family: sans-serif; color: #0A2540; display: inline-block; }
 
-/* Corrected properties below */
-.project-footer { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  border-top: 1px solid #E5E7EB; 
-  padding-top: 20px; 
-}
-
+.project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E5E7EB; padding-top: 20px; }
 .lead-email { display: block; color: #666; }
 .btn-primary { background-color: #0A2540; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
 .auth-prompt { font-size: 0.9rem; color: #666; font-style: italic; }

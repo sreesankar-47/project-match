@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../App.css';
+import '../App.css'; 
 
 function Home() {
   const [projects, setProjects] = useState([]);
@@ -39,9 +39,23 @@ function Home() {
 
   return (
     <div>
-      {/* Professional Navbar */}
+      {/* Professional Left-Right Navbar */}
       <nav className="nav-bar">
-        <h1>ProjectMatch</h1>
+        <div className="logo">
+          <h1 style={{ margin: 0, fontSize: '1.25rem', color: '#0A2540' }}>ProjectMatch</h1>
+        </div>
+
+        <div className="nav-links">
+          <a href="/projects">Browse</a>
+          <a href="/post">Post</a>
+          <a href="/dashboard">Dashboard</a>
+          <a href="/matchmaker" style={{ color: '#0A2540', fontWeight: 'bold' }}>AI Matchmaker</a>
+        </div>
+
+        <div className="user-section">
+          <span>Hi, {currentUser?.name || 'User'}</span>
+          <button className="logout-btn">Logout</button>
+        </div>
       </nav>
 
       <main className="container">
@@ -97,4 +111,3 @@ function Home() {
 }
 
 export default Home;
-
