@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,15 +14,13 @@ function Login() {
     setError(null);
     
     try {
-      // Sending login credentials to your live Render backend
       const response = await axios.post('https://project-match.onrender.com/api/auth/login', formData);
       
-      // 💾 Save the JWT token and user info to the browser's local storage
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       
-      // 🚀 Redirect the user back to the Browse Projects homepage
-      navigate('/');
+      // 🚀 FORCE A FULL RELOAD to ensure App.jsx updates the Navbar instantly
+      window.location.href = '/';
       
     } catch (error) {
       console.error("Login error:", error);
@@ -61,7 +57,8 @@ function Login() {
             type="password" 
             name="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={formData.password} // Fixed: should be onChange={handleChange} in original
+            onChange={handleChange} 
             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
             required
           />
