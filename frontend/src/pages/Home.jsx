@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css'; 
+import '../App.css';
 
 function Home() {
   const [projects, setProjects] = useState([]);
@@ -97,3 +97,4 @@ function Home() {
 }
 
 export default Home;
+
