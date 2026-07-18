@@ -19,7 +19,6 @@ router.post('/', async (req, res) => {
     try {
         const { title, description, requiredSkills, projectLead } = req.body;
 
-        // Validation check
         if (!title || !description || !requiredSkills || !projectLead) {
             return res.status(400).json({ message: 'All fields are required' });
         }
@@ -51,12 +50,10 @@ router.post('/:id/request', async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Check if the user has already requested to join to prevent spam
     if (project.requests.includes(userId)) {
       return res.status(400).json({ message: 'You have already requested to join this project.' });
     }
 
-    // Add the user's ID to the requests array and save to the database
     project.requests.push(userId);
     await project.save();
 
@@ -67,15 +64,13 @@ router.post('/:id/request', async (req, res) => {
   }
 });
 
-// 📊 Route 4: Get Dashboard projects (UPDATED to populate accepted members)
+// 📊 Route 4: Get Dashboard projects
 router.get('/my-projects/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        
-        // Find projects where this user is the lead, and populate both arrays!
         const myProjects = await Project.find({ projectLead: userId })
             .populate('requests', 'name email')
-            .populate('acceptedMembers', 'name email'); // 👈 Pulls accepted team members
+            .populate('acceptedMembers', 'name email');
 
         res.status(200).json(myProjects);
     } catch (error) {
@@ -84,7 +79,7 @@ router.get('/my-projects/:userId', async (req, res) => {
     }
 });
 
-// 🏆 Route 5: NEW route to Accept an applicant
+// 🏆 Route 5: Accept an applicant
 router.post('/:id/accept', async (req, res) => {
   try {
     const projectId = req.params.id;
@@ -93,10 +88,8 @@ router.post('/:id/accept', async (req, res) => {
     const project = await Project.findById(projectId);
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
-    // 1. Remove the user from the requests array
     project.requests = project.requests.filter(id => id.toString() !== userId);
     
-    // 2. Add the user to the acceptedMembers array
     if (!project.acceptedMembers.includes(userId)) {
       project.acceptedMembers.push(userId);
     }
@@ -109,19 +102,48 @@ router.post('/:id/accept', async (req, res) => {
   }
 });
 
-// 🤝 Route 6: NEW route to get projects where the user has been accepted
+// 🤝 Route 6: Get projects where the user has been accepted
 router.get('/joined-projects/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        
-        // Find projects where this user's ID is inside the acceptedMembers array
         const joinedProjects = await Project.find({ acceptedMembers: userId })
-            .populate('projectLead', 'name email'); // Populate lead so they can see who accepted them
+            .populate('projectLead', 'name email');
 
         res.status(200).json(joinedProjects);
     } catch (error) {
         console.error('❌ Error fetching joined projects:', error);
         res.status(500).json({ message: 'Server error pulling joined projects' });
+    }
+});
+
+// 🤖 Route 7: AI Matchmaking
+router.get('/match/:userId', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const allProjects = await Project.find().populate('projectLead', 'name email');
+
+        // Score projects based on skills overlap
+        const matches = allProjects.map(project => {
+            const matchesCount = project.requiredSkills.filter(skill => 
+                user.skills.includes(skill)
+            ).length;
+            
+            return {
+                ...project.toObject(),
+                matchScore: matchesCount 
+            };
+        });
+
+        // Filter for at least one skill match and sort by best score
+        const rankedMatches = matches
+            .filter(m => m.matchScore > 0)
+            .sort((a, b) => b.matchScore - a.matchScore);
+
+        res.json(rankedMatches);
+    } catch (error) {
+        res.status(500).json({ message: "Error in AI matchmaking", error });
     }
 });
 
