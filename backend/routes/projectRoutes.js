@@ -67,4 +67,20 @@ router.post('/:id/request', async (req, res) => {
   }
 });
 
+// 📊 Route 4: Get projects created by a specific user (Dashboard)
+router.get('/my-projects/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        // Find projects where this user is the lead, and populate the requests array!
+        const myProjects = await Project.find({ projectLead: userId })
+            .populate('requests', 'name email'); 
+
+        res.status(200).json(myProjects);
+    } catch (error) {
+        console.error('❌ Error fetching dashboard projects:', error);
+        res.status(500).json({ message: 'Server error pulling dashboard projects' });
+    }
+});
+
 module.exports = router;
