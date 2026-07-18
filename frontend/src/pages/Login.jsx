@@ -19,7 +19,7 @@ function Login() {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       
-      // 🚀 FORCE A FULL RELOAD to ensure App.jsx updates the Navbar instantly
+  
       window.location.href = '/';
       
     } catch (error) {

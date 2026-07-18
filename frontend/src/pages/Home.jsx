@@ -24,7 +24,6 @@ function Home() {
       });
   }, []);
 
-  // 👈 2. UPDATED: Now sends the real request to your Render backend
   const handleJoinRequest = async (projectId, projectTitle) => {
     try {
       // Send the request to the new route we just built in the backend
@@ -46,7 +45,7 @@ function Home() {
   return (
     <div style={{ padding: '30px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
       <h1 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
-        🚀 ProjectMatch Marketplace
+          ProjectMatch Marketplace
       </h1>
       
       <div style={{ marginTop: '20px' }}>
