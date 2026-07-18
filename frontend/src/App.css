@@ -1,83 +1,29 @@
+/* App.css - Professional Navy Theme */
+body { background-color: #F8F9FB; color: #0A2540; font-family: 'Georgia', serif; margin: 0; }
 
+.nav-bar { background: white; border-bottom: 1px solid #E5E7EB; padding: 1.5rem 2rem; }
+.container { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
 
-:root {
-  --navy: #0A2540;
-  --off-white: #F8F9FB;
-  --border: #E5E7EB;
-  --text-main: #0A2540;
-  --text-muted: #666666;
+.hero-title { font-size: 3rem; font-weight: bold; margin-bottom: 20px; line-height: 1.2; }
+.hero-subtitle { font-size: 1.2rem; color: #666; margin-bottom: 40px; }
+
+.project-card { background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+.listing-tag { font-size: 0.75rem; color: #666; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; }
+.project-desc { color: #444; line-height: 1.6; margin-bottom: 25px; }
+
+.skills-section { margin-bottom: 25px; }
+.skills-label { font-size: 0.75rem; text-transform: uppercase; color: #888; margin-bottom: 12px; }
+.skill-pill { border: 1px solid #E5E7EB; padding: 6px 16px; border-radius: 20px; margin-right: 10px; font-size: 0.9rem; font-family: sans-serif; color: #0A2540; display: inline-block; }
+
+/* Corrected properties below */
+.project-footer { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  border-top: 1px solid #E5E7EB; 
+  padding-top: 20px; 
 }
 
-body {
-  background-color: var(--off-white);
-  color: var(--text-main);
-  font-family: 'Georgia', serif;
-  margin: 0;
-  padding: 0;
-}
-
-/* Navbar / Header */
-.nav-bar {
-  background: white;
-  border-bottom: 1px solid var(--border);
-  padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Clean Project Card Styling */
-.project-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Skills/Tags styling */
-.skill-pill {
-  border: 1px solid var(--border);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-right: 10px;
-  font-size: 0.9rem;
-  font-family: sans-serif;
-  color: var(--navy);
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-/* Primary Button Styling */
-.btn-primary {
-  background-color: var(--navy);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  font-family: sans-serif;
-  transition: opacity 0.2s;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-/* Helper for the "Live Listing" tag */
-.listing-tag {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* Hero Section cleanup */
-#center {
-  padding: 60px 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
+.lead-email { display: block; color: #666; }
+.btn-primary { background-color: #0A2540; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
+.auth-prompt { font-size: 0.9rem; color: #666; font-style: italic; }
