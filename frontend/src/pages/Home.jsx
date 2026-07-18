@@ -6,7 +6,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 👈 1. Read the user from local storage to see if they are logged in
+  // 1. Read the user from local storage to see if they are logged in
   const userString = localStorage.getItem('user');
   const currentUser = userString ? JSON.parse(userString) : null;
 
@@ -24,11 +24,20 @@ function Home() {
       });
   }, []);
 
-  // 👈 2. Create the function that fires when the button is clicked
-  const handleJoinRequest = (projectId, projectTitle) => {
-    // For now, we will trigger a success alert. 
-    // Later, this can be an axios.post() to send an email or database notification!
-    alert(`✅ Success! A request to join "${projectTitle}" has been triggered.`);
+  // 👈 2. UPDATED: Now sends the real request to your Render backend
+  const handleJoinRequest = async (projectId, projectTitle) => {
+    try {
+      // Send the request to the new route we just built in the backend
+      const response = await axios.post(`https://project-match.onrender.com/api/projects/${projectId}/request`, {
+        userId: currentUser._id || currentUser.id // Safely grabbing the user's ID
+      });
+      
+      alert(`✅ Success! ${response.data.message}`);
+    } catch (error) {
+      console.error("Error sending request:", error);
+      // Show the specific error message from the backend (e.g., "You have already requested to join")
+      alert(`❌ ${error.response?.data?.message || 'Failed to send request.'}`);
+    }
   };
 
   if (loading) return <div style={{ padding: '20px' }}>Loading project marketplace...</div>;
@@ -83,7 +92,7 @@ function Home() {
                 </div>
               )}
 
-              {/* 👈 3. The Conditional "Request to Join" UI */}
+              {/* 3. The Conditional "Request to Join" UI */}
               <div style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
                 {currentUser ? (
                   <button 
